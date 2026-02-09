@@ -1,0 +1,9 @@
+{
+	"name": "debasish-adf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "885cb305-d51c-44a0-bf49-27fcd38f65ee",
+		"tenantId": "91839db2-c075-48fb-a5b0-2baf2dea5a60"
+	}
+}
