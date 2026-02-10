@@ -77,6 +77,58 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CsvOnPrem2Adls')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LsLakeHouse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "bronze"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "customer_id",
+						"type": "String"
+					},
+					{
+						"name": "customer_name",
+						"type": "String"
+					},
+					{
+						"name": "city",
+						"type": "String"
+					},
+					{
+						"name": "state",
+						"type": "String"
+					},
+					{
+						"name": "created_date",
+						"type": "String"
+					},
+					{
+						"name": "status",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LsLakeHouse')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Csv_Src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -228,12 +280,8 @@
 										},
 										"enableStaging": false,
 										"translator": {
-											"type": "TabularTranslator",
-											"typeConversion": true,
-											"typeConversionSettings": {
-												"allowDataTruncation": true,
-												"treatBooleanAsNumber": false
-											}
+											"value": "@if(\n  equals(item().file_name,'customers_50k.csv'),\n  pipeline().parameters.customer_column,\n  if(\n    equals(item().file_name,'orders_50k.csv'),\n    pipeline().parameters.orders_column,\n    if(\n      equals(item().file_name,'payments_50k.csv'),\n      pipeline().parameters.payment_column,\n      null\n    )\n  )\n)\n",
+											"type": "Expression"
 										}
 									},
 									"inputs": [
@@ -242,7 +290,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"p_file_name": {
-													"value": "@item().p_file_name",
+													"value": "@item().file_name",
 													"type": "Expression"
 												}
 											}
@@ -254,7 +302,7 @@
 											"type": "DatasetReference",
 											"parameters": {
 												"p_file_name": {
-													"value": "@item().p_file_name",
+													"value": "@item().file_name",
 													"type": "Expression"
 												}
 											}
@@ -273,15 +321,270 @@
 						"type": "array",
 						"defaultValue": [
 							{
-								"file_name": "customers.csv"
+								"file_name": "customers_50k.csv"
 							},
 							{
-								"file_name": "payments.csv"
+								"file_name": "payments_50k.csv"
 							},
 							{
-								"file_name": "orderss.csv"
+								"file_name": "orders_50k.csv"
 							}
 						]
+					},
+					"customer_column": {
+						"type": "object",
+						"defaultValue": {
+							"type": "TabularTranslator",
+							"mappings": [
+								{
+									"source": {
+										"name": "customer_id",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "customer_id",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "customer_name",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "customer_name",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "city",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "city",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "state",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "state",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "created_date",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "created_date",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "status",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "status",
+										"type": "String",
+										"physicalType": "String"
+									}
+								}
+							],
+							"typeConversion": true,
+							"typeConversionSettings": {
+								"allowDataTruncation": true,
+								"treatBooleanAsNumber": false
+							}
+						}
+					},
+					"orders_column": {
+						"type": "object",
+						"defaultValue": {
+							"type": "TabularTranslator",
+							"mappings": [
+								{
+									"source": {
+										"name": "order_id",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "order_id",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "customer_id",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "customer_id",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "order_date",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "order_date",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "order_amount",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "order_amount",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "payment_mode",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "payment_mode",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "order_status",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "order_status",
+										"type": "String",
+										"physicalType": "String"
+									}
+								}
+							],
+							"typeConversion": true,
+							"typeConversionSettings": {
+								"allowDataTruncation": true,
+								"treatBooleanAsNumber": false
+							}
+						}
+					},
+					"payment_column": {
+						"type": "object",
+						"defaultValue": {
+							"type": "TabularTranslator",
+							"mappings": [
+								{
+									"source": {
+										"name": "payment_id",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "payment_id",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "order_id",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "order_id",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "payment_date",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "payment_date",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "paid_amount",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "paid_amount",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "payment_status",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "payment_status",
+										"type": "String",
+										"physicalType": "String"
+									}
+								},
+								{
+									"source": {
+										"name": "bank_name",
+										"type": "String",
+										"physicalType": "String"
+									},
+									"sink": {
+										"name": "bank_name",
+										"type": "String",
+										"physicalType": "String"
+									}
+								}
+							],
+							"typeConversion": true,
+							"typeConversionSettings": {
+								"allowDataTruncation": true,
+								"treatBooleanAsNumber": false
+							}
+						}
 					}
 				},
 				"annotations": []
@@ -289,6 +592,110 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Csv_Src')]",
 				"[concat(variables('factoryId'), '/datasets/Csv_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CsvOnPrem')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LsOnPremDevice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "DimAirline.csv"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LsOnPremDevice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPremToAdls')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "OnPrem2Adls",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "CsvOnPrem",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CsvOnPrem2Adls",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CsvOnPrem')]",
+				"[concat(variables('factoryId'), '/datasets/CsvOnPrem2Adls')]"
 			]
 		}
 	]
