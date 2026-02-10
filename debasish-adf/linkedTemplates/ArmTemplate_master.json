@@ -1,0 +1,84 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "debasish-adf"
+		},
+		"LsOnPremDevice_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LsOnPremDevice'"
+		},
+		"LsAzureDataLakeStorage_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'LsAzureDataLakeStorage'"
+		},
+		"LsLakeHouse_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LsLakeHouse'"
+		},
+		"LsOnPremDevice_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\ADF-Project"
+		},
+		"LsOnPremDevice_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "debasish.mohanty03@outlook.com"
+		},
+		"LsAzureDataLakeStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storageaccountdebasish.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "debasish-adf_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"LsAzureDataLakeStorage_accountKey": {
+						"value": "[parameters('LsAzureDataLakeStorage_accountKey')]"
+					},
+					"LsLakeHouse_connectionString": {
+						"value": "[parameters('LsLakeHouse_connectionString')]"
+					},
+					"LsOnPremDevice_password": {
+						"value": "[parameters('LsOnPremDevice_password')]"
+					},
+					"LsAzureDataLakeStorage_properties_typeProperties_url": {
+						"value": "[parameters('LsAzureDataLakeStorage_properties_typeProperties_url')]"
+					},
+					"LsOnPremDevice_properties_typeProperties_host": {
+						"value": "[parameters('LsOnPremDevice_properties_typeProperties_host')]"
+					},
+					"LsOnPremDevice_properties_typeProperties_userId": {
+						"value": "[parameters('LsOnPremDevice_properties_typeProperties_userId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "debasish-adf"
+		},
+		"LsOnPremDevice_password": {
+			"value": ""
+		},
+		"LsAzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"LsLakeHouse_connectionString": {
+			"value": ""
+		},
+		"LsOnPremDevice_properties_typeProperties_host": {
+			"value": "C:\\ADF-Project"
+		},
+		"LsOnPremDevice_properties_typeProperties_userId": {
+			"value": "debasish.mohanty03@outlook.com"
+		},
+		"LsAzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://storageaccountdebasish.dfs.core.windows.net/"
+		}
+	}
+}
