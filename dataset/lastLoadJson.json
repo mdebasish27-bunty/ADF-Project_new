@@ -1,0 +1,27 @@
+{
+	"name": "lastLoadJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LsAzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "LastLoad.json",
+				"folderPath": "Incremental_MetaData",
+				"fileSystem": "bronze"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"last_load": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

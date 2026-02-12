@@ -1,0 +1,16 @@
+{
+	"name": "AzureSqlSrc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LsAzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "sales_orders"
+		}
+	}
+}
