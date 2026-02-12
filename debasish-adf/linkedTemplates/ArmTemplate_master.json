@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LsAzureDataLakeStorage'"
 		},
+		"LsAzureSqlDatabase_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LsAzureSqlDatabase'"
+		},
 		"LsLakeHouse_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LsLakeHouse'"
@@ -22,6 +26,18 @@
 		"LsAzureDataLakeStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storageaccountdebasish.dfs.core.windows.net/"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "debasishsqlserver.database.windows.net"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "free-sql-db-3331949"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "debasishadmin"
 		},
 		"LsOnPremDevice_properties_typeProperties_host": {
 			"type": "string",
@@ -61,6 +77,9 @@
 					"LsAzureDataLakeStorage_accountKey": {
 						"value": "[parameters('LsAzureDataLakeStorage_accountKey')]"
 					},
+					"LsAzureSqlDatabase_password": {
+						"value": "[parameters('LsAzureSqlDatabase_password')]"
+					},
 					"LsLakeHouse_connectionString": {
 						"value": "[parameters('LsLakeHouse_connectionString')]"
 					},
@@ -69,6 +88,15 @@
 					},
 					"LsAzureDataLakeStorage_properties_typeProperties_url": {
 						"value": "[parameters('LsAzureDataLakeStorage_properties_typeProperties_url')]"
+					},
+					"LsAzureSqlDatabase_properties_typeProperties_server": {
+						"value": "[parameters('LsAzureSqlDatabase_properties_typeProperties_server')]"
+					},
+					"LsAzureSqlDatabase_properties_typeProperties_database": {
+						"value": "[parameters('LsAzureSqlDatabase_properties_typeProperties_database')]"
+					},
+					"LsAzureSqlDatabase_properties_typeProperties_userName": {
+						"value": "[parameters('LsAzureSqlDatabase_properties_typeProperties_userName')]"
 					},
 					"LsOnPremDevice_properties_typeProperties_host": {
 						"value": "[parameters('LsOnPremDevice_properties_typeProperties_host')]"

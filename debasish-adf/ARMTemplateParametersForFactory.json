@@ -8,6 +8,9 @@
 		"LsAzureDataLakeStorage_accountKey": {
 			"value": ""
 		},
+		"LsAzureSqlDatabase_password": {
+			"value": ""
+		},
 		"LsLakeHouse_connectionString": {
 			"value": ""
 		},
@@ -16,6 +19,15 @@
 		},
 		"LsAzureDataLakeStorage_properties_typeProperties_url": {
 			"value": "https://storageaccountdebasish.dfs.core.windows.net/"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_server": {
+			"value": "debasishsqlserver.database.windows.net"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_database": {
+			"value": "free-sql-db-3331949"
+		},
+		"LsAzureSqlDatabase_properties_typeProperties_userName": {
+			"value": "debasishadmin"
 		},
 		"LsOnPremDevice_properties_typeProperties_host": {
 			"value": "C:\\ADF-Project"
