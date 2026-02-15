@@ -5,6 +5,8 @@
 			{
 				"name": "SqlRawData",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "LastLoad",
@@ -31,7 +33,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * from sales_orders\nwhere last_updated > '@{activity('LastLoad').output.firstRow.LastLoad}'",
+							"value": "SELECT * from sales_orders\nwhere try_cast(last_updated as date) > '@{activity('LastLoad').output.firstRow.Last_Load}'",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -117,15 +119,80 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "select max(last_updated) from sales_orders",
+						"sqlReaderQuery": "select max(last_updated) as last_updated from sales_orders",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "AzureSqlSrc",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": true
 				}
+			},
+			{
+				"name": "Watermark",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SqlRawData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "last_load",
+								"value": {
+									"value": "@activity('Latest_load').output.firstRow.last_updated",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "emptyJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "lastLoadJson",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"variables": {
